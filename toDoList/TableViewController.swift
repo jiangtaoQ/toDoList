@@ -13,8 +13,13 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        if let items = defaults.array(forKey: "TodoListArray") as? [String]{
+            itemArray = items
+        }
     }
-    let itemArray = ["1111","222","3333"]
+    var itemArray = ["1111","222","3333"]
+    
+    let defaults = UserDefaults.standard
     //
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return itemArray.count
@@ -39,6 +44,34 @@ class TableViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
         
+    }
+    // add button new item
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add New Today Item", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Add Item", style: .default){
+            (action) in
+            //what will happpen once the user clicks tha add tiem button
+            //append item array
+            self.itemArray.append(textField.text!)
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            self.tableView.reloadData()
+            
+            print(textField.text!)
+        }
+        alert.addTextField{(alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            
+            textField = alertTextField
+            //print(alertTextField.text!)
+            print("now")
+            
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
 }
 
